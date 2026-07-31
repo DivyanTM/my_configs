@@ -1,0 +1,57 @@
+# ==========================================
+# CMake & Build Directories
+# ==========================================
+build/
+build-*/
+CMakeCache.txt
+CMakeFiles/
+CMakeScripts/
+Makefile
+cmake_install.cmake
+compile_commands.json
+install_manifest.txt
+Testing/
+.ninja_*
+installer/
+release/
+
+# ==========================================
+# Qt & Qt Creator Specific
+# ==========================================
+*.user
+*.user.*
+.qtc_clangd/
+.qt/
+*_autogen/
+
+# ==========================================
+# Qt Auto-Generated Files (Catch-all)
+# (In case of accidental in-source builds)
+# ==========================================
+moc_*.cpp
+moc_*.h
+ui_*.h
+qrc_*.cpp
+
+# ==========================================
+# Compiled Object Files & Binaries
+# ==========================================
+*.o
+*.obj
+*.so
+*.dylib
+*.a
+*.lib
+*.dll
+*.exe
+RadarSystem
+
+# ==========================================
+# OS & Editor Specific
+# ==========================================
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
