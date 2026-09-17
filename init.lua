@@ -336,14 +336,30 @@ local plugins = {
 	},
 
 	-- Diagnostics panel
-	{
-		"folke/trouble.nvim",
-		dependencies = {
-			"nvim-tree/nvim-web-devicons",
-		},
-		cmd = "Trouble",
+{
+	"folke/trouble.nvim",
+	dependencies = {
+		"nvim-tree/nvim-web-devicons",
 	},
-
+	lazy = false,
+	config = function()
+		require("trouble").setup({
+			modes = {
+				diagnostics = {
+					auto_close = false,
+					follow = true,
+					indent = {
+						hl = "FoldColumn",
+					},
+					win = {
+						position = "bottom",
+						size = 10,
+					},
+				},
+			},
+		})
+	end,
+},
 	-- Mason / LSP
 	{
 		"williamboman/mason.nvim",
@@ -491,10 +507,24 @@ vim.keymap.set("n", "<leader>bd", ":bdelete<CR>", {
 })
 
 -- Trouble diagnostics
-vim.keymap.set("n", "<leader>xx", ":Trouble diagnostics toggle<CR>", {
-	noremap = true,
+-- Problems / Diagnostics
+vim.keymap.set("n", "<leader>xx", function()
+	require("trouble").toggle("diagnostics")
+end, {
 	silent = true,
-	desc = "Toggle diagnostics list",
+	desc = "Toggle Problems",
+})
+
+vim.keymap.set("n", "<leader>xb", function()
+	require("trouble").toggle({
+		mode = "diagnostics",
+		filter = {
+			buf = 0,
+		},
+	})
+end, {
+	silent = true,
+	desc = "Buffer Problems",
 })
 
 vim.keymap.set("n", "<leader>xq", ":Trouble quickfix toggle<CR>", {
