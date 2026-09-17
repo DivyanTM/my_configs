@@ -209,12 +209,16 @@ local plugins = {
 					"json",
 					"yaml",
 					"markdown",
+					"python",
 					"markdown_inline",
 				},
+
 				auto_install = true,
+
 				highlight = {
 					enable = true,
 				},
+
 				indent = {
 					enable = true,
 				},
@@ -252,48 +256,50 @@ local plugins = {
 		event = { "BufWritePre" },
 		cmd = { "ConformInfo" },
 		opts = {
-  formatters_by_ft = {
-    lua = { "stylua" },
+			formatters_by_ft = {
+				lua = { "stylua" },
 
-    javascript = { "prettier" },
-    typescript = { "prettier" },
-    javascriptreact = { "prettier" },
-    typescriptreact = { "prettier" },
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescriptreact = { "prettier" },
 
-    html = { "prettier" },
+				html = { "prettier" },
+				htmlangular = { "prettier_angular" },
 
-    -- Angular template files
-    htmlangular = { "prettier_angular" },
+				css = { "prettier" },
+				scss = { "prettier" },
+				json = { "prettier" },
+				yaml = { "prettier" },
+				markdown = { "prettier" },
 
-    css = { "prettier" },
-    scss = { "prettier" },
-    json = { "prettier" },
-    yaml = { "prettier" },
-    markdown = { "prettier" },
+				java = { "google-java-format" },
 
-    java = { "google-java-format" },
+				-- Python
+				python = { "black" },
 
-    c = { "clang_format" },
-    cpp = { "clang_format" },
-  },
+				-- C / C++
+				c = { "clang_format" },
+				cpp = { "clang_format" },
+			},
 
-  formatters = {
-    prettier_angular = {
-      command = "prettier",
-      args = {
-        "--parser",
-        "angular",
-      },
-      stdin = true,
-    },
-  },
+			formatters = {
+				prettier_angular = {
+					command = "prettier",
+					args = {
+						"--parser",
+						"angular",
+					},
+					stdin = true,
+				},
+			},
 
-  format_on_save = {
-    timeout_ms = 1000,
-    lsp_format = "fallback",
-  },
-},
-},
+			format_on_save = {
+				timeout_ms = 1000,
+				lsp_format = "fallback",
+			},
+		},
+	},
 
 	-- Comment toggle
 	{
@@ -312,6 +318,7 @@ local plugins = {
 			})
 		end,
 	},
+
 	-- Floating terminal
 	{
 		"akinsho/toggleterm.nvim",
@@ -355,6 +362,7 @@ local plugins = {
 				ensure_installed = {
 					"clangd",
 					"ts_ls",
+					"basedpyright",
 					"jdtls",
 					"html",
 					"cssls",
@@ -384,6 +392,10 @@ local plugins = {
 require("lazy").setup(plugins, {})
 
 local builtin = require("telescope.builtin")
+
+-- ============================================================
+-- KEYMAPS
+-- ============================================================
 
 -- File explorer
 vim.keymap.set("n", "<C-b>", ":NvimTreeToggle<CR>", {
@@ -491,7 +503,10 @@ vim.keymap.set("n", "<leader>xq", ":Trouble quickfix toggle<CR>", {
 	desc = "Toggle quickfix list",
 })
 
--- Autocomplete
+-- ============================================================
+-- AUTOCOMPLETE
+-- ============================================================
+
 local cmp = require("cmp")
 
 cmp.setup({
@@ -521,7 +536,11 @@ cmp.setup({
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
--- C/C++
+-- ============================================================
+-- LSP
+-- ============================================================
+
+-- C / C++
 vim.lsp.config("clangd", {
 	cmd = {
 		"clangd",
@@ -529,6 +548,7 @@ vim.lsp.config("clangd", {
 		"--clang-tidy",
 		"--log=verbose",
 	},
+
 	filetypes = {
 		"c",
 		"cpp",
@@ -537,13 +557,16 @@ vim.lsp.config("clangd", {
 		"cuda",
 		"proto",
 	},
+
 	root_markers = {
 		"compile_commands.json",
 		"compile_flags.txt",
 		".git",
 	},
+
 	capabilities = capabilities,
 })
+
 vim.lsp.enable("clangd")
 
 -- JavaScript / TypeScript
@@ -552,6 +575,7 @@ vim.lsp.config("ts_ls", {
 		"typescript-language-server",
 		"--stdio",
 	},
+
 	filetypes = {
 		"javascript",
 		"javascriptreact",
@@ -560,31 +584,62 @@ vim.lsp.config("ts_ls", {
 		"typescriptreact",
 		"typescript.tsx",
 	},
+
 	root_markers = {
 		"tsconfig.json",
 		"jsconfig.json",
 		"package.json",
 		".git",
 	},
+
 	capabilities = capabilities,
 })
+
 vim.lsp.enable("ts_ls")
+
+-- Python
+vim.lsp.config("basedpyright", {
+	cmd = {
+		"basedpyright-langserver",
+		"--stdio",
+	},
+
+	filetypes = {
+		"python",
+	},
+
+	root_markers = {
+		"pyproject.toml",
+		"setup.py",
+		"setup.cfg",
+		"requirements.txt",
+		".git",
+	},
+
+	capabilities = capabilities,
+})
+
+vim.lsp.enable("basedpyright")
 
 -- Java
 vim.lsp.config("jdtls", {
 	cmd = {
 		"jdtls",
 	},
+
 	filetypes = {
 		"java",
 	},
+
 	root_markers = {
 		"build.gradle",
 		"pom.xml",
 		".git",
 	},
+
 	capabilities = capabilities,
 })
+
 vim.lsp.enable("jdtls")
 
 -- HTML
@@ -593,16 +648,20 @@ vim.lsp.config("html", {
 		"vscode-html-language-server",
 		"--stdio",
 	},
+
 	filetypes = {
 		"html",
 		"templ",
 	},
+
 	root_markers = {
 		"package.json",
 		".git",
 	},
+
 	capabilities = capabilities,
 })
+
 vim.lsp.enable("html")
 
 -- CSS
@@ -611,20 +670,27 @@ vim.lsp.config("cssls", {
 		"vscode-css-language-server",
 		"--stdio",
 	},
+
 	filetypes = {
 		"css",
 		"scss",
 		"less",
 	},
+
 	root_markers = {
 		"package.json",
 		".git",
 	},
+
 	capabilities = capabilities,
 })
+
 vim.lsp.enable("cssls")
 
--- LSP keymaps
+-- ============================================================
+-- LSP KEYMAPS
+-- ============================================================
+
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(event)
 		local opts = {
